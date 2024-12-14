@@ -1,0 +1,27 @@
+.sidebar {
+  height: 100%; /* Tam yüksekliği kapsar */
+  background-color: #f8f9fa;
+  width: 50px; /* Dar görünüm genişliği */
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebar.expanded {
+  width: 200px; /* Genişletilmiş görünüm genişliği */
+}
+
+.project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-list li {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.project-list li:hover {
+  background-color: #e9ecef;
+}
