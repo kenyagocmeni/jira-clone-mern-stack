@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { fetchProjectDetails, fetchProjectMembers } from "@components/redux/slices/projectSlice";
+import {
+  fetchProjectDetails,
+  fetchProjectMembers,
+  removeProjectMember
+} from "@components/redux/slices/projectSlice";
 import { fetchTasks } from "@components/redux/slices/taskSlice";
 import KanbanBoard from "@components/components/KanbanBoard";
 import Link from "next/link";
@@ -30,6 +34,18 @@ export default function ProjectDetailsPage({ params }) {
   if (error) return <p>Error: {error}</p>;
   if (!projectDetails) return <p>Project not found.</p>;
 
+  const handleRemoveMember = (userId) => {
+    dispatch(removeProjectMember({ projectId, userId }))
+      .unwrap()
+      .then(() => {
+        console.log("Üye başarıyla projeden çıkarıldı.");
+        dispatch(fetchProjectMembers(projectId)); // Üye listesini güncelle
+      })
+      .catch((error) => {
+        console.error("Üye çıkarma başarısız:", error.message);
+      });
+  };
+
   return (
     <div className="p-4">
       {/* Header */}
@@ -45,7 +61,12 @@ export default function ProjectDetailsPage({ params }) {
         }}
       >
         <div className="flex items-center">
-          <Image src="/images/projectIcon.jpg" width={30} height={15} alt="Project Icon" />
+          <Image
+            src="/images/projectIcon.jpg"
+            width={30}
+            height={15}
+            alt="Project Icon"
+          />
           <h1 className="text-slate-700 font-semibold text-2xl ml-3">
             {projectDetails?.name}
           </h1>
@@ -71,7 +92,9 @@ export default function ProjectDetailsPage({ params }) {
             <h3 className="text-md font-medium mb-2">Üyeler</h3>
             <ul className="list-disc list-inside space-y-2">
               {members
-                .filter((member) => member._id !== projectDetails?.leaderId?._id) // Lideri filtreliyoruz
+                .filter(
+                  (member) => member._id !== projectDetails?.leaderId?._id
+                ) // Lideri filtreliyoruz
                 .map((member) => (
                   <li
                     key={member._id}
@@ -82,9 +105,7 @@ export default function ProjectDetailsPage({ params }) {
                     </span>
                     <button
                       className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                      onClick={() =>
-                        alert(`Üye "${member.name}" projeden çıkarılacak!`)
-                      }
+                      onClick={() => handleRemoveMember(member._id)}
                     >
                       Çıkar
                     </button>
