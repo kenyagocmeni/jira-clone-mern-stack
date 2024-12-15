@@ -278,7 +278,7 @@ const projectSlice = createSlice({
       })
       .addCase(removeProjectMember.fulfilled, (state, action) => {
         state.members = state.members.filter(
-          (member) => member.id !== action.payload
+          (member) => member._id !== action.payload
         );
       })
       .addCase(leaveProject.fulfilled, (state, action) => {
