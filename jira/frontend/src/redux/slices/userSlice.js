@@ -5,7 +5,7 @@ export const registerUser = createAsyncThunk(
   'user/registerUser',
   async (userData, thunkAPI) => {
     try {
-      const response = await fetch('/api/users/register', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
