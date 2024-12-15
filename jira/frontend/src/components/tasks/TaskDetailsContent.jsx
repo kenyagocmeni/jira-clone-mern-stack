@@ -94,6 +94,8 @@ export default function TaskDetailsPage({ projectId, taskId }) {
       .unwrap()
       .then(() => {
         console.log("Alt görev başarıyla silindi!");
+        dispatch(fetchSubtasks(taskId)); // Alt görev listesini güncelle
+        router.push(`/projects/${projectId}/tasks/${taskId}/edit`);
       })
       .catch((error) => {
         console.error("Alt görev silme başarısız:", error);
@@ -118,11 +120,8 @@ export default function TaskDetailsPage({ projectId, taskId }) {
     }
   };
 
-  const handleSubtaskStatusUpdate = (projectId, subtaskId, newStatus) => {
-    dispatch(updateSubtaskStatus({ projectId, taskId, subtaskId, status: newStatus }))
-      .unwrap()
-      .then(() => console.log("Subtask status updated successfully"))
-      .catch((error) => console.error("Failed to update subtask status:", error.message));
+  const handleSubtaskStatusUpdate = (subtaskId, newStatus) => {
+    dispatch(updateSubtaskStatus({ taskId, subtaskId, status: newStatus }));
   };
 
   const handleSubtaskFileUpload = () => {
@@ -224,7 +223,7 @@ export default function TaskDetailsPage({ projectId, taskId }) {
     <div className="flex space-x-6 p-6">
       {selectedSubtask ? (
         <div className="flex w-full space-x-6 mt-10">
-          {/* Subtask Details Right Section */}
+          {/* Subtask Details Left Section */}
           <div className="w-3/5 space-y-6">
             <h2 className="text-xl font-semibold">Subtask Details</h2>
             <input
@@ -273,7 +272,12 @@ export default function TaskDetailsPage({ projectId, taskId }) {
             >
               Save Subtask
             </button>
-
+            <button
+  onClick={() => handleSubtaskDeletion(selectedSubtask._id)}
+  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600"
+>
+  Delete
+</button>
             <button
               onClick={() => setSelectedSubtask(null)}
               className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
@@ -335,7 +339,7 @@ export default function TaskDetailsPage({ projectId, taskId }) {
             </div>
           </div>
 
-          {/* Subtask Details Left Section */}
+          {/* Subtask Details Right Section */}
           <div className="w-2/5 space-y-6">
             <div className="flex items-center">
               <h3 className="text-lg font-semibold">Atayan:</h3>
