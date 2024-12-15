@@ -118,8 +118,11 @@ export default function TaskDetailsPage({ projectId, taskId }) {
     }
   };
 
-  const handleSubtaskStatusUpdate = (subtaskId, newStatus) => {
-    dispatch(updateSubtaskStatus({ taskId, subtaskId, status: newStatus }));
+  const handleSubtaskStatusUpdate = (projectId, subtaskId, newStatus) => {
+    dispatch(updateSubtaskStatus({ projectId, taskId, subtaskId, status: newStatus }))
+      .unwrap()
+      .then(() => console.log("Subtask status updated successfully"))
+      .catch((error) => console.error("Failed to update subtask status:", error.message));
   };
 
   const handleSubtaskFileUpload = () => {
@@ -334,18 +337,6 @@ export default function TaskDetailsPage({ projectId, taskId }) {
 
           {/* Subtask Details Left Section */}
           <div className="w-2/5 space-y-6">
-            <select
-              value={selectedSubtask.status}
-              onChange={(e) =>
-                handleSubtaskStatusUpdate(selectedSubtask._id, e.target.value)
-              }
-              className="w-32 h-12 px-4 border rounded bg-blue-500 text-white"
-            >
-              <option value="todo">To Do</option>
-              <option value="inProgress">In Progress</option>
-              <option value="verify">Verify</option>
-              <option value="done">Done</option>
-            </select>
             <div className="flex items-center">
               <h3 className="text-lg font-semibold">Atayan:</h3>
               {projectDetails?.leaderId ? (
